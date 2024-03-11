@@ -1,0 +1,21 @@
+<div
+  data-testid="modal"
+  class="str-chat__modal str-chat__modal--{{ isOpen ? 'open' : 'close' }}"
+>
+  <div
+    data-testid="close"
+    class="str-chat__modal__close-button"
+    (click)="close()"
+    (keyup.enter)="close()"
+  >
+    <stream-icon-placeholder icon="close"></stream-icon-placeholder>
+  </div>
+  <div class="str-chat__modal__inner" #modalInner>
+    <ng-container *ngIf="content; else elseContent">
+      <ng-container *ngTemplateOutlet="content"></ng-container>
+    </ng-container>
+    <ng-template #elseContent>
+      <ng-content></ng-content>
+    </ng-template>
+  </div>
+</div>

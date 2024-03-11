@@ -1,0 +1,34 @@
+@import "../../stream-chat-angular/src/assets/styles/v2/scss/index.scss";
+@import "~@ctrl/ngx-emoji-mart/picker";
+@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+}
+
+#root {
+  display: flex;
+  height: 100%;
+
+  stream-channel-list {
+    width: 30%;
+  }
+
+  stream-channel {
+    width: 70%;
+  }
+}
+
+.material-icons {
+  font-family: "Material Icons" !important;
+}
+
+.str-chat__thread
+  .str-chat__main-panel-inner.str-chat-angular__message-list-host--empty {
+  height: 100%;
+}

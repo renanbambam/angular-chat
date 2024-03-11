@@ -1,0 +1,29 @@
+The `Avatar` component displays the provided image, with fallback to the first letter of the optional name input.
+
+## Basic Usage
+
+A typical use case for the `Avatar` component would be to use in your custom components that will completely override a message component, or similar.
+
+**Example 1** - a basic example:
+
+```typescript
+@Component({
+  selector: "app-custom-message",
+  template: `
+    <stream-avatar [imageUrl]="imageUrl" [name]="name"></stream-avatar>
+    <!-- Other parts of the custom message component -->
+  `,
+})
+export class CustomMessageComponent {
+  imageUrl =
+    "https://pbs.twimg.com/profile_images/897621870069112832/dFGq6aiE_400x400.jpg";
+  name = "Roy";
+}
+```
+
+## Customization
+
+You can provide your own avatar component by the [`CustomTemplatesService`](../services/CustomTemplatesService.mdx)
+
+[//]: # "Start of generated content"
+[//]: # "End of generated content"

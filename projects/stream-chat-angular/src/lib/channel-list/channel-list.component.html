@@ -1,0 +1,126 @@
+<div
+  #container
+  data-testid="channel-list-container"
+  class="str-chat str-chat__channel-list str-chat-channel-list messaging str-chat__theme-{{
+    theme$ | async
+  }}"
+  [class.str-chat-channel-list--open]="(isOpen$ | async) === true"
+>
+  <div
+    *ngIf="
+      (isError$ | async) === false && (isInitializing$ | async) === false;
+      else statusIndicator
+    "
+    class="str-chat__channel-list-messenger"
+  >
+    <div class="str-chat__channel-list-messenger__main">
+      <ng-content select="[channel-list-top]"></ng-content>
+      <div
+        class="str-chat__channel-list-empty"
+        *ngIf="!(channels$ | async)?.length"
+      >
+        <stream-icon icon="chat-bubble"></stream-icon>
+        <p data-testid="empty-channel-list-indicator">
+          {{ "streamChat.You have no channels currently" | translate }}
+        </p>
+      </div>
+      <p
+        *ngIf="!(channels$ | async)?.length"
+        class="str-chat__channel-list-empty-v1"
+        data-testid="empty-channel-list-indicator"
+      >
+        {{ "streamChat.You have no channels currently" | translate }}
+      </p>
+      <ng-container
+        *ngFor="let channel of channels$ | async; trackBy: trackByChannelId"
+      >
+        <ng-template #defaultTemplate let-channelInput="channel">
+          <stream-channel-preview
+            data-testclass="channel-preview"
+            [channel]="channelInput"
+          ></stream-channel-preview>
+        </ng-template>
+        <div (click)="channelSelected()" (keyup.enter)="channelSelected()">
+          <ng-container
+            *ngTemplateOutlet="
+              customChannelPreviewTemplate || defaultTemplate;
+              context: { channel: channel }
+            "
+          ></ng-container>
+        </div>
+      </ng-container>
+      <div
+        *ngIf="hasMoreChannels$ | async"
+        class="str-chat__load-more-button"
+        (click)="loadMoreChannels()"
+        (keyup.enter)="loadMoreChannels()"
+        data-testid="load-more"
+      >
+        <button
+          class="str-chat__load-more-button__button str-chat__cta-button"
+          data-testid="load-more-button"
+          [disabled]="isLoadingMoreChannels"
+        >
+          <span *ngIf="!isLoadingMoreChannels; else loadingIndicator">{{
+            "Load more" | translate
+          }}</span>
+          <ng-template #loadingIndicator
+            ><stream-loading-indicator-placeholder></stream-loading-indicator-placeholder
+          ></ng-template>
+        </button>
+      </div>
+      <ng-content select="[channel-list-bottom]"></ng-content>
+    </div>
+  </div>
+</div>
+
+<ng-template #statusIndicator>
+  <ng-container *ngIf="isError$ | async">
+    <ng-container *ngTemplateOutlet="chatDown"></ng-container>
+  </ng-container>
+  <ng-container *ngIf="isInitializing$ | async">
+    <ng-container *ngTemplateOutlet="loadingChannels"></ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #chatDown>
+  <div data-testid="chatdown-container" class="str-chat__down">
+    <ng-container *ngTemplateOutlet="loadingChannels"></ng-container>
+    <div class="str-chat__down-main">
+      <stream-icon-placeholder
+        icon="connection-error"
+      ></stream-icon-placeholder>
+      <h1>{{ "streamChat.Connection error" | translate }}</h1>
+      <h3>
+        {{
+          "streamChat.Error connecting to chat, refresh the page to try again."
+            | translate
+        }}
+      </h3>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loadingChannels>
+  <div data-testid="loading-indicator" class="str-chat__loading-channels">
+    <ng-container *ngTemplateOutlet="loadingChannel"></ng-container>
+    <ng-container *ngTemplateOutlet="loadingChannel"></ng-container>
+    <ng-container *ngTemplateOutlet="loadingChannel"></ng-container>
+  </div>
+</ng-template>
+
+<ng-template #loadingChannel>
+  <div
+    class="str-chat__loading-channels-item str-chat__channel-preview-loading"
+  >
+    <div class="str-chat__loading-channels-avatar"></div>
+    <div
+      class="
+        str-chat__loading-channels-meta str-chat__channel-preview-end-loading
+      "
+    >
+      <div class="str-chat__loading-channels-username"></div>
+      <div class="str-chat__loading-channels-status"></div>
+    </div>
+  </div>
+</ng-template>
